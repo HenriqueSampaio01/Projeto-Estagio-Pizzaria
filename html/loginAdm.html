@@ -5,35 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BackStock – Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/loginAdmStyle.css">
+  <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
 
-  <!-- ═══════════════ LOGIN CARD ═══════════════ -->
   <div class="card" id="loginCard">
 
     <div class="logo-wrap">
-      <!-- Pizza SVG icon -->
       <svg class="logo-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32" cy="32" r="30" fill="#2A1208" stroke="#3A2316" stroke-width="1.5"/>
-        <!-- crust -->
         <circle cx="32" cy="32" r="28" fill="none" stroke="#8B3A10" stroke-width="4.5"/>
-        <!-- sauce -->
         <circle cx="32" cy="32" r="24" fill="#7A1515"/>
-        <!-- cheese -->
         <circle cx="32" cy="32" r="22" fill="#D4801A" opacity="0.85"/>
-        <!-- slice lines -->
         <line x1="32" y1="10" x2="32" y2="54" stroke="#8B3A10" stroke-width="1.2" opacity="0.6"/>
         <line x1="10" y1="32" x2="54" y2="32" stroke="#8B3A10" stroke-width="1.2" opacity="0.6"/>
         <line x1="16.5" y1="16.5" x2="47.5" y2="47.5" stroke="#8B3A10" stroke-width="1.2" opacity="0.6"/>
         <line x1="47.5" y1="16.5" x2="16.5" y2="47.5" stroke="#8B3A10" stroke-width="1.2" opacity="0.6"/>
-        <!-- toppings: olives -->
         <circle cx="26" cy="26" r="3" fill="#1C1C1C"/>
         <circle cx="38" cy="22" r="2.5" fill="#1C1C1C"/>
         <circle cx="22" cy="38" r="2.5" fill="#1C1C1C"/>
         <circle cx="40" cy="40" r="3" fill="#1C1C1C"/>
         <circle cx="32" cy="36" r="2" fill="#1C1C1C"/>
-        <!-- highlight -->
         <circle cx="22" cy="20" r="4" fill="white" opacity="0.06"/>
       </svg>
 
@@ -77,46 +69,8 @@
     </div>
   </div>
 
-  <!-- ═══════════════ DASHBOARD PADRÃO ═══════════════ -->
-  <div class="dashboard" id="dashboard">
-    <div class="dash-header">
-      <div>
-        <div class="dash-title">Back<span>Stock</span></div>
-        <div class="dash-user" id="dashUser">Bem-vindo!</div>
-      </div>
-      <button class="btn-logout" id="btnLogout">Sair</button>
-    </div>
-
-    <div class="dash-grid">
-      <div class="dash-card">
-        <div class="dc-icon">🍕</div>
-        <div class="dc-label">Pedidos Hoje</div>
-        <div class="dc-val">—</div>
-      </div>
-      <div class="dash-card">
-        <div class="dc-icon">📦</div>
-        <div class="dc-label">Produtos</div>
-        <div class="dc-val">—</div>
-      </div>
-      <div class="dash-card">
-        <div class="dc-icon">👥</div>
-        <div class="dc-label">Clientes</div>
-        <div class="dc-val">—</div>
-      </div>
-      <div class="dash-card">
-        <div class="dc-icon">📊</div>
-        <div class="dc-label">Relatórios</div>
-        <div class="dc-val">—</div>
-      </div>
-    </div>
-
-    <div class="dash-note">
-      Tela padrão do sistema — integração com banco de dados em desenvolvimento.
-    </div>
-  </div>
-
   <script src="/js/loginAdm.js" defer></script>
-  <script type="module">
+  <script type="module" defer>
     import { supabase } from './js/supabase.js'
   
     // Teste de conexão

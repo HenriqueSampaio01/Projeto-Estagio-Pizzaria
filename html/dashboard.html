@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Início</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="page-dashboard">
+
+  <div class="dashboard">
+    <div class="dash-header">
+      <div>
+        <div class="dash-title">Back<span>Stock</span></div>
+        <div class="dash-user" id="dashUser">Bem-vindo!</div>
+      </div>
+      <button class="btn-logout" id="btnLogout">Sair</button>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dc-icon">🍕</div>
+        <div class="dc-label">Pedidos Hoje</div>
+        <div class="dc-val">—</div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-icon">📦</div>
+        <div class="dc-label">Produtos</div>
+        <div class="dc-val">—</div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-icon">👥</div>
+        <div class="dc-label">Clientes</div>
+        <div class="dc-val">—</div>
+      </div>
+      <div class="dash-card">
+        <div class="dc-icon">📊</div>
+        <div class="dc-label">Relatórios</div>
+        <div class="dc-val">—</div>
+      </div>
+    </div>
+
+    <div class="dash-note">
+      Tela padrão do sistema — integração com banco de dados em desenvolvimento.
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const nome = params.get('nome');
+
+    if (!nome) {
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('dashUser').textContent = 'Olá, ' + nome;
+    }
+
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
