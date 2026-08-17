@@ -8,7 +8,7 @@ const alertMsg   = document.getElementById('alertMsg')
 const alertText  = document.getElementById('alertText')
 const eyeIcon    = document.getElementById('eyeIcon')
 
-// ── Toggle mostrar/ocultar senha ──
+// Toggle mostrar/ocultar senha
 togglePass.addEventListener('click', () => {
   const isPass = senhaInput.type === 'password'
   senhaInput.type = isPass ? 'text' : 'password'
@@ -17,7 +17,7 @@ togglePass.addEventListener('click', () => {
     : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
 })
 
-// ── Submit por tecla Enter ──
+// enviar pela tecla Enter
 ;[emailInput, senhaInput].forEach(el => {
   el.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin() })
 })
