@@ -76,13 +76,6 @@
     </div>
   </div>
 
-  <script src="../js/loginAdm.js" defer></script>
-  <script type="module" defer>
-    import { supabase } from '../js/supabase.js'
-  
-    // Teste de conexão
-    const { data, error } = await supabase.from('categoria').select('*')
-    console.log(data, error)
-  </script>
+  <script type="module" src="../js/loginAdm.js"></script>
 </body>
 </html>

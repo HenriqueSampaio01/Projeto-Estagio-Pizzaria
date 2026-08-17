@@ -51,13 +51,13 @@
     const nome = params.get('nome');
 
     if (!nome) {
-      window.location.href = 'login.html';
+      window.location.href = 'loginAdm.html';
     } else {
       document.getElementById('dashUser').textContent = 'Olá, ' + nome;
     }
 
     document.getElementById('btnLogout').addEventListener('click', () => {
-      window.location.href = 'login.html';
+      window.location.href = 'loginAdm.html';
     });
   </script>
 </body>
