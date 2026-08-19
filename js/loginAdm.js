@@ -59,5 +59,5 @@ async function doLogin() {
 
   // Pega o nome do user_metadata (caso tenha sido salvo no cadastro)
   const nome = data.user?.user_metadata?.nome || data.user?.email
-  window.location.href = 'dashboard.html?nome=' + encodeURIComponent(nome)
+  window.location.href = 'dashboard.html'
 }

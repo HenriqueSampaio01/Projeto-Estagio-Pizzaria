@@ -41,24 +41,33 @@
       </div>
     </div>
 
+    <div class="dash-card" onclick="window.location.href='cadastroAdm.html'" style="cursor:pointer;">
+        <div class="dc-icon">🔐</div>
+        <div class="dc-label">Administradores</div>
+        <div class="dc-val" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Cadastrar</div>
+    </div>
+
     <div class="dash-note">
       Tela padrão do sistema — integração com banco de dados em desenvolvimento.
     </div>
   </div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const nome = params.get('nome');
+  <script type="module">
+    import { supabase } from '../js/supabase.js'
 
-    if (!nome) {
-      window.location.href = 'loginAdm.html';
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      window.location.href = 'loginAdm.html'
     } else {
-      document.getElementById('dashUser').textContent = 'Olá, ' + nome;
+      const nome = session.user?.user_metadata?.nome || session.user?.email
+      document.getElementById('dashUser').textContent = 'Olá, ' + nome
     }
 
-    document.getElementById('btnLogout').addEventListener('click', () => {
-      window.location.href = 'loginAdm.html';
-    });
+    document.getElementById('btnLogout').addEventListener('click', async () => {
+      await supabase.auth.signOut()
+      window.location.href = 'loginAdm.html'
+    })
   </script>
 </body>
 </html>
