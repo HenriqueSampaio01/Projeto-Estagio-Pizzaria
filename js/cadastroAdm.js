@@ -108,6 +108,6 @@ async function doCadastro() {
 
   // Sucesso — esconde o formulário e exibe confirmação
   formFields.style.display = 'none'
-  successText.innerHTML = `Cadastro de <strong>${nome}</strong> realizado!<br>Verifique seu e-mail para confirmar a conta.`
+  successText.innerHTML = `Cadastro de <strong>${nome}</strong> realizado!<br>`
   successBox.classList.add('visible')
 }
