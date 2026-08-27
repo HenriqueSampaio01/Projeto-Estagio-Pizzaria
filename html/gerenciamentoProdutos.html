@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Produtos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/gerenciamentoProdutos.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Back<span>Stock</span></div>
+      <div class="dash-user" id="dashUser">Bem-vindo!</div>
+    </div>
+    <div class="header-actions">
+      <a href="dashboard.html" class="btn-back-dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <button class="btn-logout" id="btnLogout">Sair</button>
+    </div>
+  </div>
+
+  <!-- Abas -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="produtos">📦 Produtos</button>
+    <button class="tab-btn" data-tab="categorias">🏷️ Categorias</button>
+  </div>
+
+  <!-- PAINEL PRODUTOS -->
+  <div class="tab-panel active" id="tab-produtos">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchProduto" placeholder="Buscar produto…" />
+      </div>
+      <button class="btn-add" id="btnAddProduto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Novo produto
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th class="hide-mobile">Categoria</th>
+            <th class="hide-mobile">Ingredientes</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="bodyProdutos">
+          <tr class="empty-row"><td colspan="6">Carregando produtos…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAINEL CATEGORIAS -->
+  <div class="tab-panel" id="tab-categorias">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchCategoria" placeholder="Buscar categoria…" />
+      </div>
+      <button class="btn-add" id="btnAddCategoria">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nova categoria
+      </button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="bodyCategorias">
+          <tr class="empty-row"><td colspan="4">Carregando categorias…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL PRODUTO -->
+<div class="modal-overlay" id="modalProduto">
+  <div class="modal">
+    <button class="btn-close-modal" id="fecharModalProduto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title" id="modalProdutoTitulo">Novo <span>Produto</span></div>
+    <div class="modal-sub" id="modalProdutoSub">Preencha os dados para cadastrar um produto.</div>
+
+    <div class="alert" id="alertProduto" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="alertProdutoText">Erro.</span>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label for="pNome">Nome</label>
+        <div class="input-wrap">
+          <input type="text" id="pNome" placeholder="Ex: Pizza Margherita" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+      </div>
+      <div class="field">
+        <label for="pPreco">Preço (R$)</label>
+        <div class="input-wrap">
+          <input type="number" id="pPreco" placeholder="0,00" min="0" step="0.01" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="pCategoria">Categoria</label>
+      <select id="pCategoria"><option value="">Selecionar categoria…</option></select>
+    </div>
+
+    <div class="field">
+      <label for="pIngredientes">Ingredientes</label>
+      <textarea id="pIngredientes" placeholder="Ex: Molho de tomate, mussarela, manjericão…"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="pAtivo">Status</label>
+      <select id="pAtivo">
+        <option value="true">Ativo</option>
+        <option value="false">Inativo</option>
+      </select>
+    </div>
+
+    <input type="hidden" id="pId" />
+
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelarProduto">Cancelar</button>
+      <button class="btn-save" id="salvarProduto">Salvar produto</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CATEGORIA -->
+<div class="modal-overlay" id="modalCategoria">
+  <div class="modal">
+    <button class="btn-close-modal" id="fecharModalCategoria">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title" id="modalCategoriaTitulo">Nova <span>Categoria</span></div>
+    <div class="modal-sub">Preencha os dados para cadastrar uma categoria.</div>
+
+    <div class="alert" id="alertCategoria" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="alertCategoriaText">Erro.</span>
+    </div>
+
+    <div class="field">
+      <label for="cNome">Nome</label>
+      <div class="input-wrap">
+        <input type="text" id="cNome" placeholder="Ex: Pizzas, Bebidas…" />
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="cAtivo">Status</label>
+      <select id="cAtivo">
+        <option value="true">Ativo</option>
+        <option value="false">Inativo</option>
+      </select>
+    </div>
+
+    <input type="hidden" id="cId" />
+
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelarCategoria">Cancelar</button>
+      <button class="btn-save" id="salvarCategoria">Salvar categoria</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIRMAR EXCLUSÃO -->
+<div class="modal-overlay" id="modalExcluir">
+  <div class="modal modal-danger" style="max-width:380px;text-align:center;">
+    <div class="modal-title">Confirmar <span>exclusão</span></div>
+    <p class="modal-sub" id="textoExcluir">Tem certeza que deseja inativar este item?</p>
+    <div class="modal-footer" style="justify-content:center;">
+      <button class="btn-cancel" id="cancelarExcluir">Cancelar</button>
+      <button class="btn-save btn-danger" id="confirmarExcluir">Inativar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/gerenciamentoProdutos.js"></script>
+</body>
+</html>
