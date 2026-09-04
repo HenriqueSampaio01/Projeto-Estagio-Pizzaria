@@ -202,7 +202,7 @@ function abrirModalProduto(modo = 'novo', dados = null) {
   document.getElementById('pPreco').value = dados?.preco ?? ''
   document.getElementById('pIngredientes').value = dados?.ingredientes ?? ''
   document.getElementById('pAtivo').value = dados?.ativo !== false ? 'true' : 'false'
-  document.getElementById('pCategoria').value = dados?.codigo_categoria ?? ''
+  document.getElementById('pCategoria').value = dados?.categoria_id ?? ''
   document.getElementById('modalProdutoTitulo').innerHTML =
     modo === 'novo' ? 'Novo <span>Produto</span>' : 'Editar <span>Produto</span>'
   document.getElementById('modalProdutoSub').textContent =
@@ -231,7 +231,7 @@ document.getElementById('salvarProduto').addEventListener('click', async () => {
   const btn = document.getElementById('salvarProduto')
   btn.classList.add('loading'); btn.textContent = 'Salvando…'
 
-  const payload = { nome, preco, ingredientes, ativo, codigo_categoria: categoria_id }
+  const payload = { nome, preco, ingredientes, ativo, categoria_id: categoria_id }
 
   // /produtos/add ou /produtos/edit
   const { error } = id
