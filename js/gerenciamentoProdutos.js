@@ -3,7 +3,7 @@ import { supabase } from './supabase.js'
 // ── Auth ──
 const { data: { session } } = await supabase.auth.getSession()
 if (!session) {
-  window.location.href = 'loginAdm.html'
+  window.location.href = '/adm/loginAdm.html'
 } else {
   const nome = session.user?.user_metadata?.nome || session.user?.email
   document.getElementById('dashUser').textContent = 'Olá, ' + nome
@@ -11,7 +11,7 @@ if (!session) {
 
 document.getElementById('btnLogout').addEventListener('click', async () => {
   await supabase.auth.signOut()
-  window.location.href = 'loginAdm.html'
+  window.location.href = '/adm/loginAdm.html'
 })
 
 // ── Toast ──
