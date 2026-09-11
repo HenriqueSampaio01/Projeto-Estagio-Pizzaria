@@ -31,20 +31,20 @@ if (nome) {
 //  RENDERIZAR CARRINHO
 // ════════════════════════════════
 function renderCarrinho() {
-  const carrinho  = getCarrinho()
-  const conteudo  = document.getElementById('carrinhoConteudo')
-  const resumo    = document.getElementById('resumoWrap')
-  const emptyCart = document.getElementById('emptyCart')
+  const carrinho = getCarrinho()
+  const conteudo = document.getElementById('carrinhoConteudo')
+  const resumo   = document.getElementById('resumoWrap')
 
   if (!carrinho.length) {
-    conteudo.innerHTML = ''
-    conteudo.appendChild(emptyCart)
-    emptyCart.style.display = 'block'
+    conteudo.innerHTML = `
+      <div class="empty-cart">
+        <div style="font-size:48px;margin-bottom:12px;">🛒</div>
+        <p>Seu carrinho está vazio.</p>
+        <a href="index.html" class="btn-voltar">Ver cardápio</a>
+      </div>`
     resumo.style.display = 'none'
     return
   }
-
-  emptyCart.style.display = 'none'
 
   conteudo.innerHTML = carrinho.map((item, idx) => `
     <div class="carrinho-item">
@@ -62,9 +62,7 @@ function renderCarrinho() {
           </button>
         </div>
       </div>
-
       ${item.obs ? `<div class="item-obs">📝 ${item.obs}</div>` : ''}
-
       <div class="item-footer">
         <div class="item-qty-wrap">
           <button class="qty-btn" onclick="alterarQty(${idx}, -1)">−</button>
@@ -76,7 +74,6 @@ function renderCarrinho() {
     </div>
   `).join('')
 
-  // Resumo
   const total = carrinho.reduce((s, i) => s + i.preco * i.qty, 0)
   resumo.style.display = 'block'
   document.getElementById('resumoSubtotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`
