@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Carrinho</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/carrinho.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Meu <span>Carrinho</span></div>
+      <div class="dash-user" id="dashUser">Seu pedido</div>
+    </div>
+    <a href="index.html" class="btn-back-dash">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Voltar ao cardápio
+    </a>
+  </div>
+
+  <!-- Lista de itens -->
+  <div id="carrinhoConteudo">
+    <div class="empty-cart" id="emptyCart">
+      <div style="font-size:48px;margin-bottom:12px;">🛒</div>
+      <p>Seu carrinho está vazio.</p>
+      <a href="index.html" class="btn-voltar">Ver cardápio</a>
+    </div>
+  </div>
+
+  <!-- Resumo -->
+  <div class="resumo-wrap" id="resumoWrap" style="display:none;">
+    <div class="resumo-card">
+      <div class="resumo-title">Resumo do pedido</div>
+      <div class="resumo-linha">
+        <span>Subtotal</span>
+        <span id="resumoSubtotal">R$ 0,00</span>
+      </div>
+      <div class="resumo-linha resumo-total">
+        <span>Total</span>
+        <span id="resumoTotal">R$ 0,00</span>
+      </div>
+      <button class="btn-finalizar" id="btnFinalizar">Finalizar pedido</button>
+      <button class="btn-limpar" id="btnLimpar">Limpar carrinho</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL EDITAR ITEM -->
+<div class="modal-overlay" id="modalEditar">
+  <div class="modal" style="max-width:400px;">
+    <button class="btn-close-modal" id="fecharEditar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-title">Editar <span>item</span></div>
+    <div class="modal-produto-nome" id="editNome" style="margin:8px 0 4px;font-size:15px;color:var(--cream);"></div>
+    <div class="modal-produto-preco" id="editPreco" style="margin-bottom:16px;"></div>
+    <div class="qty-wrap">
+      <button class="qty-btn" id="editMinus">−</button>
+      <span class="qty-val" id="editVal">1</span>
+      <button class="qty-btn" id="editPlus">+</button>
+    </div>
+    <div class="field" style="margin-top:16px;">
+      <label for="editObs">Observações</label>
+      <textarea id="editObs" placeholder="Ex: sem cebola, bem passado…" style="min-height:70px;"></textarea>
+    </div>
+    <input type="hidden" id="editIndex" />
+    <div class="modal-footer" style="margin-top:16px;">
+      <button class="btn-cancel" id="cancelarEditar">Cancelar</button>
+      <button class="btn-save" id="salvarEditar">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/carrinho.js"></script>
+</body>
+</html>

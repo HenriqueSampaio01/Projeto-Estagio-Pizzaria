@@ -13,7 +13,14 @@
   <!-- ── Navbar ── -->
   <nav class="navbar">
     <div class="nav-brand">Back<span>Stock</span></div>
-    <div class="nav-actions">
+
+    <div class="nav-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="navSearch" placeholder="Buscar produto…" autocomplete="off" />
+      <div class="search-dropdown" id="searchDropdown"></div>
+    </div>
+
+    <div class="nav-actions" id="navActions">
       <button class="btn-nav-ghost" id="btnAbrirLogin">Entrar</button>
       <button class="btn-nav" id="btnAbrirCadastro">Criar conta</button>
     </div>
@@ -42,9 +49,6 @@
         <circle cx="68" cy="122" r="7" fill="#1C1C1C"/>
         <circle cx="128" cy="128" r="9" fill="#1C1C1C"/>
         <circle cx="100" cy="112" r="6" fill="#1C1C1C"/>
-        <circle cx="115" cy="90" r="5" fill="#7A1515"/>
-        <circle cx="85" cy="108" r="4" fill="#7A1515"/>
-        <circle cx="70" cy="85" r="4" fill="#7A1515" opacity="0.8"/>
         <circle cx="62" cy="62" r="14" fill="white" opacity="0.04"/>
       </svg>
     </div>
@@ -55,75 +59,46 @@
     <div class="section-header">
       <div class="section-tag">Cardápio</div>
       <h2 class="section-title">Nossas <span>especialidades</span></h2>
-      <p class="section-sub">Em breve você poderá ver e pedir todos os nossos produtos aqui.</p>
     </div>
-
-    <div class="cardapio-grid" id="cardapioGrid">
-      <!-- placeholder cards -->
-      <div class="produto-card placeholder">
-        <div class="produto-img">🍕</div>
-        <div class="produto-info">
-          <div class="produto-nome">Pizzas</div>
-          <div class="produto-desc">Tradicionais e especiais, feitas na hora.</div>
-        </div>
-      </div>
-      <div class="produto-card placeholder">
-        <div class="produto-img">🥤</div>
-        <div class="produto-info">
-          <div class="produto-nome">Bebidas</div>
-          <div class="produto-desc">Refrigerantes, sucos e muito mais.</div>
-        </div>
-      </div>
-      <div class="produto-card placeholder">
-        <div class="produto-img">🍺</div>
-        <div class="produto-info">
-          <div class="produto-nome">Bar</div>
-          <div class="produto-desc">Cervejas, drinks e coquetéis.</div>
-        </div>
-      </div>
-      <div class="produto-card placeholder">
-        <div class="produto-img">🍰</div>
-        <div class="produto-info">
-          <div class="produto-nome">Sobremesas</div>
-          <div class="produto-desc">Para adoçar o seu pedido.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="cardapio-note">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Cardápio completo em breve — integração com banco de dados em desenvolvimento.
+    <div id="cardapioConteudo">
+      <div class="loading-state">Carregando cardápio…</div>
     </div>
   </section>
 
-  <!-- ── Rodapé com easter egg ── -->
+  <!-- ── Rodapé fixo do carrinho ── -->
+  <div class="cart-bar" id="cartBar" style="display:none;" onclick="window.location.href='carrinho.html'">
+    <div class="cart-bar-left">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      <span id="cartCount">0 itens</span>
+    </div>
+    <div class="cart-bar-center">Ver carrinho</div>
+    <div class="cart-bar-right" id="cartTotal">R$ 0,00</div>
+  </div>
+
+  <!-- ── Rodapé ── -->
   <footer class="footer">
     <div class="footer-brand">Back<span>Stock</span></div>
     <p class="footer-text">Bar e Pizzaria Clube de Campo Recreativo &nbsp;·&nbsp; Todos os direitos reservados</p>
     <p class="footer-copy" id="easterEgg">© 2025 BackStock</p>
   </footer>
 
-  <!-- ══════════ MODAL LOGIN CLIENTE ══════════ -->
+  <!-- ══════════ MODAL LOGIN ══════════ -->
   <div class="modal-overlay" id="modalLogin">
     <div class="modal">
       <button class="btn-close-modal" id="fecharLogin">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-
       <div class="logo-wrap" style="margin-bottom:20px;">
         <div class="logo-text">
           <div class="brand">Back<span>Stock</span></div>
           <div class="tagline">Acesse sua conta</div>
         </div>
       </div>
-
       <div class="divider"><span class="divider-label">Login</span></div>
-
       <div class="alert" id="alertLogin" role="alert">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span id="alertLoginText">Erro.</span>
       </div>
-
       <div class="field">
         <label for="loginEmail">E-mail</label>
         <div class="input-wrap">
@@ -131,7 +106,6 @@
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         </div>
       </div>
-
       <div class="field">
         <label for="loginSenha">Senha</label>
         <div class="input-wrap" style="position:relative;">
@@ -142,41 +116,32 @@
           </button>
         </div>
       </div>
-
       <button class="btn-login" id="btnLogin">Entrar</button>
-
-      <div class="modal-switch">
-        Não tem conta? <a href="#" id="irParaCadastro">Criar conta</a>
-      </div>
+      <div class="modal-switch">Não tem conta? <a href="#" id="irParaCadastro">Criar conta</a></div>
     </div>
   </div>
 
-  <!-- ══════════ MODAL CADASTRO CLIENTE ══════════ -->
+  <!-- ══════════ MODAL CADASTRO ══════════ -->
   <div class="modal-overlay" id="modalCadastro">
     <div class="modal">
       <button class="btn-close-modal" id="fecharCadastro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
-
       <div class="logo-wrap" style="margin-bottom:20px;">
         <div class="logo-text">
           <div class="brand">Back<span>Stock</span></div>
           <div class="tagline">Crie sua conta</div>
         </div>
       </div>
-
       <div class="divider"><span class="divider-label">Cadastro</span></div>
-
       <div class="alert" id="alertCadastro" role="alert">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <span id="alertCadastroText">Erro.</span>
       </div>
-
       <div class="success-box" id="successCadastro">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         <p>Cadastro realizado com sucesso!<br>Agora você já pode fazer login.</p>
       </div>
-
       <div id="formCadastro">
         <div class="fields-row">
           <div class="field">
@@ -194,7 +159,6 @@
             </div>
           </div>
         </div>
-
         <div class="field">
           <label for="cadEmail">E-mail</label>
           <div class="input-wrap">
@@ -202,7 +166,6 @@
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           </div>
         </div>
-
         <div class="field">
           <label for="cadTelefone">Telefone <span style="color:var(--text-muted);font-weight:400;">(opcional)</span></label>
           <div class="input-wrap">
@@ -210,7 +173,6 @@
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
           </div>
         </div>
-
         <div class="field">
           <label for="cadSenha">Senha</label>
           <div class="input-wrap" style="position:relative;">
@@ -221,13 +183,31 @@
             </button>
           </div>
         </div>
-
         <button class="btn-login" id="btnCadastrar">Criar conta</button>
-
-        <div class="modal-switch">
-          Já tem conta? <a href="#" id="irParaLogin">Entrar</a>
-        </div>
+        <div class="modal-switch">Já tem conta? <a href="#" id="irParaLogin">Entrar</a></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ══════════ MODAL ADICIONAR AO CARRINHO ══════════ -->
+  <div class="modal-overlay" id="modalProduto">
+    <div class="modal" style="max-width:400px;">
+      <button class="btn-close-modal" id="fecharModalProduto">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal-produto-nome" id="modalProdutoNome"></div>
+      <div class="modal-produto-preco" id="modalProdutoPreco"></div>
+      <div class="modal-produto-desc" id="modalProdutoDesc"></div>
+      <div class="field" style="margin-top:20px;">
+        <label for="modalObs">Observações</label>
+        <textarea id="modalObs" placeholder="Ex: sem cebola, bem passado…" style="min-height:70px;"></textarea>
+      </div>
+      <div class="qty-wrap">
+        <button class="qty-btn" id="qtyMinus">−</button>
+        <span class="qty-val" id="qtyVal">1</span>
+        <button class="qty-btn" id="qtyPlus">+</button>
+      </div>
+      <button class="btn-login" id="btnAdicionarCarrinho" style="margin-top:16px;">Adicionar ao carrinho</button>
     </div>
   </div>
 
