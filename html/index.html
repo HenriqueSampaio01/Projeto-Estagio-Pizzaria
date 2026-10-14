@@ -21,6 +21,10 @@
     </div>
 
     <div class="nav-actions" id="navActions">
+      <a href="endereco.html" class="btn-nav-location" id="navBtnEndereco" title="Definir ou alterar endereço de entrega">
+        <span>📍</span>
+        <span id="navEnderecoLabel">Informar endereço</span>
+      </a>
       <button class="btn-nav-ghost" id="btnAbrirLogin">Entrar</button>
       <button class="btn-nav" id="btnAbrirCadastro">Criar conta</button>
     </div>
@@ -73,6 +77,16 @@
     </div>
     <div class="cart-bar-center">Ver carrinho</div>
     <div class="cart-bar-right" id="cartTotal">R$ 0,00</div>
+  </div>
+
+  <!-- ── Banner de Consentimento de Cookies / LocalStorage (REQ. 11) ── -->
+  <div class="cookie-banner" id="cookieBanner" style="display:none;">
+    <div class="cookie-banner-text">
+      <strong>🍪 Uso de Cookies e Armazenamento Local:</strong> Utilizamos cookies e armazenamento local para salvar seu carrinho e endereço de entrega neste navegador mesmo sem criar conta.
+    </div>
+    <div class="cookie-banner-actions">
+      <button type="button" class="btn-cookie-accept" id="btnAceitarCookies">Aceitar e continuar</button>
+    </div>
   </div>
 
   <!-- ── Rodapé ── -->

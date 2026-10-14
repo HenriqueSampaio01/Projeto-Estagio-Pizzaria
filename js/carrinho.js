@@ -8,6 +8,15 @@ function salvarCarrinho(carrinho) {
   localStorage.setItem('bs_carrinho', JSON.stringify(carrinho))
 }
 
+function getEnderecoSelecionado() {
+  try {
+    const raw = localStorage.getItem('bs_endereco_selecionado')
+    return raw ? JSON.parse(raw) : null
+  } catch {
+    return null
+  }
+}
+
 // ── Toast ──
 function showToast(msg, tipo = 'success') {
   const t    = document.getElementById('toast')
@@ -25,6 +34,18 @@ function showToast(msg, tipo = 'success') {
 const nome = sessionStorage.getItem('cliente_nome')
 if (nome) {
   document.getElementById('dashUser').textContent = `Olá, ${nome}`
+}
+
+// ── Preview do endereço selecionado ──
+function atualizarPreviewEndereco() {
+  const previewEl = document.getElementById('carrinhoEnderecoPreview')
+  if (!previewEl) return
+  const end = getEnderecoSelecionado()
+  if (end && end.logradouro) {
+    previewEl.textContent = `${end.logradouro}, ${end.numero} — ${end.bairro} (${end.cidade}/${(end.estado || '').trim()})`
+  } else {
+    previewEl.textContent = 'Nenhum endereço selecionado (você escolherá na próxima etapa)'
+  }
 }
 
 // ════════════════════════════════
@@ -78,6 +99,7 @@ function renderCarrinho() {
   resumo.style.display = 'block'
   document.getElementById('resumoSubtotal').textContent = `R$ ${total.toFixed(2).replace('.', ',')}`
   document.getElementById('resumoTotal').textContent    = `R$ ${total.toFixed(2).replace('.', ',')}`
+  atualizarPreviewEndereco()
 }
 
 // ════════════════════════════════
@@ -112,10 +134,14 @@ document.getElementById('btnLimpar').addEventListener('click', () => {
   renderCarrinho()
 })
 
-// Finalizar pedido (placeholder)
+// Finalizar pedido -> redireciona para seleção/cadastro de endereço e pagamento
 document.getElementById('btnFinalizar').addEventListener('click', () => {
-  showToast('Funcionalidade em desenvolvimento.')
-  // TODO: redirecionar para tela de pagamento/endereço
+  const carrinho = getCarrinho()
+  if (!carrinho.length) {
+    showToast('Adicione pelo menos um item ao carrinho.', 'error')
+    return
+  }
+  window.location.href = 'endereco.html'
 })
 
 // ════════════════════════════════

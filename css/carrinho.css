@@ -176,6 +176,43 @@
   margin-bottom: 4px;
 }
 
+.resumo-endereco-preview {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.resumo-endereco-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.resumo-endereco-texto {
+  font-size: 13px;
+  color: var(--cream);
+}
+
+.resumo-endereco-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--orange);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.resumo-endereco-link:hover {
+  text-decoration: underline;
+}
+
 .resumo-linha {
   display: flex;
   justify-content: space-between;

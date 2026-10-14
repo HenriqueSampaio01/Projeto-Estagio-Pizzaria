@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Forma de Pagamento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/pagamento.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <!-- Cabeçalho -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Forma de <span>Pagamento</span></div>
+      <div class="dash-user" id="dashUser">Selecione como deseja pagar seu pedido</div>
+    </div>
+    <div class="header-actions">
+      <a href="endereco.html" class="btn-back-dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar ao endereço
+      </a>
+      <a href="carrinho.html" class="btn-back-dash">
+        Carrinho
+      </a>
+    </div>
+  </div>
+
+  <!-- Etapas do Pedido -->
+  <div class="checkout-steps">
+    <a href="carrinho.html" class="step-item done">
+      <span class="step-badge">✓</span>
+      <span class="step-label">1. Carrinho</span>
+    </a>
+    <div class="step-line"></div>
+    <a href="endereco.html" class="step-item done">
+      <span class="step-badge">✓</span>
+      <span class="step-label">2. Endereço</span>
+    </a>
+    <div class="step-line"></div>
+    <div class="step-item active">
+      <span class="step-badge">3</span>
+      <span class="step-label">3. Pagamento</span>
+    </div>
+  </div>
+
+  <div class="checkout-grid">
+
+    <!-- COLUNA ESQUERDA: ENDEREÇO + PICKER DE PAGAMENTO -->
+    <div class="checkout-col">
+
+      <!-- Card: Endereço de Entrega Selecionado -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">Local de <span>Entrega</span></div>
+          <a href="endereco.html" class="link-action">Trocar endereço</a>
+        </div>
+
+        <div class="endereco-resumo-box" id="boxEnderecoResumo">
+          <div class="endereco-resumo-icon">📍</div>
+          <div class="endereco-resumo-texto">
+            <div class="endereco-resumo-rua" id="pagEndRua">Carregando endereço…</div>
+            <div class="endereco-resumo-sub" id="pagEndSub"></div>
+          </div>
+        </div>
+
+        <!-- Identificação rápida caso esteja sem login -->
+        <div class="visitante-fields" id="boxVisitante" style="display:none;">
+          <div class="field">
+            <label for="visNome">Seu Nome (para entrega) *</label>
+            <div class="input-wrap">
+              <input type="text" id="visNome" placeholder="Como devemos chamar você?" />
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+          </div>
+          <div class="field">
+            <label for="visTelefone">Telefone / WhatsApp <span style="color:var(--text-muted);font-weight:400;">(opcional)</span></label>
+            <div class="input-wrap">
+              <input type="text" id="visTelefone" placeholder="(00) 00000-0000" maxlength="15" />
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Picker de Forma de Pagamento (REQ. 10 - GET /pagamentos/get) -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">Selecione o <span>Pagamento</span></div>
+        </div>
+
+        <div class="alert" id="alertPagamento" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="alertPagamentoText">Selecione uma forma de pagamento.</span>
+        </div>
+
+        <!-- Picker Select (Dropdown) -->
+        <div class="picker-select-wrap">
+          <label for="pickerPagamento">Método de pagamento *</label>
+          <select id="pickerPagamento" class="picker-select">
+            <option value="">Carregando formas de pagamento…</option>
+          </select>
+        </div>
+
+        <!-- Picker Visual em Cards (Sincronizado com o Select) -->
+        <div class="pagamento-cards-grid" id="pagamentoCardsGrid"></div>
+
+        <!-- Detalhe condicional: PIX -->
+        <div class="pagamento-detalhe-box" id="detalhePix">
+          <div style="font-size:13px;color:var(--cream);font-weight:600;">⚡ Pagamento via PIX</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.5;">
+            Você pode pagar pelo PIX usando a chave CNPJ do <strong>Bar e Pizzaria Clube de Campo Recreativo</strong> ou diretamente com o entregador via QR Code na maquininha:
+          </p>
+          <div class="pix-key-row">
+            <span class="pix-key-code" id="chavePixTexto">58.390.050/0001-02</span>
+            <button type="button" class="btn-copy-pix" id="btnCopiarPix">Copiar chave CNPJ</button>
+          </div>
+        </div>
+
+        <!-- Detalhe condicional: Dinheiro / Troco -->
+        <div class="pagamento-detalhe-box" id="detalheDinheiro">
+          <label class="troco-check-label">
+            <input type="checkbox" id="chkPrecisaTroco" />
+            <span>Preciso de troco na entrega</span>
+          </label>
+          <div class="field" id="wrapValorTroco" style="display:none;margin-bottom:0;">
+            <label for="inputTrocoPara">Troco para quanto? (R$)</label>
+            <div class="input-wrap">
+              <input type="number" id="inputTrocoPara" placeholder="Ex: 100,00" min="0" step="0.01" />
+              <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detalhe condicional: Cartão -->
+        <div class="pagamento-detalhe-box" id="detalheCartao">
+          <div style="font-size:13px;color:var(--cream);font-weight:600;">💳 Pagamento na Entrega</div>
+          <p style="font-size:12px;color:var(--text-muted);line-height:1.5;">
+            Nosso entregador levará a maquininha de cartão até o seu endereço. Aceitamos as principais bandeiras.
+          </p>
+        </div>
+
+        <!-- Observações gerais do pedido -->
+        <div class="field" style="margin-bottom:0;margin-top:4px;">
+          <label for="obsPedido">Observações para a entrega <span style="color:var(--text-muted);font-weight:400;">(opcional)</span></label>
+          <textarea id="obsPedido" placeholder="Ex: Tocar o interfone 12, portão preto…"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- COLUNA DIREITA: RESUMO DO PEDIDO -->
+    <div class="checkout-col">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">Resumo do <span>Pedido</span></div>
+          <a href="carrinho.html" class="link-action">Editar itens</a>
+        </div>
+
+        <div class="resumo-itens-lista" id="resumoItensLista"></div>
+
+        <div class="resumo-linha">
+          <span>Subtotal dos itens</span>
+          <span id="pagSubtotal">R$ 0,00</span>
+        </div>
+        <div class="resumo-linha">
+          <span>Forma de pagamento</span>
+          <span id="pagMetodoResumo" style="color:var(--cream);">Não selecionada</span>
+        </div>
+        <div class="resumo-linha resumo-total">
+          <span>Total a pagar</span>
+          <span id="pagTotal">R$ 0,00</span>
+        </div>
+
+        <button class="btn-confirmar-pedido" id="btnConfirmarPedido" type="button">
+          Confirmar e enviar pedido
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL DE PEDIDO REALIZADO COM SUCESSO -->
+<div class="modal-overlay" id="modalSucessoPedido">
+  <div class="modal-sucesso">
+    <div class="sucesso-icon-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="modal-title" style="font-family:'Playfair Display',serif;font-size:24px;color:var(--cream);">
+      Pedido <span style="color:var(--orange);">Confirmado!</span>
+    </div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.5;">
+      Seu pedido foi recebido pelo <strong>Bar e Pizzaria Clube de Campo Recreativo</strong> e já entrou em preparo.
+    </p>
+    <div class="sucesso-resumo-box" id="sucessoResumoBox"></div>
+    <button class="btn-confirmar-pedido" id="btnVoltarInicio" type="button" style="margin-top:8px;">
+      Voltar ao cardápio
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/pagamento.js"></script>
+</body>
+</html>

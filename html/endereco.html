@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Endereço de Entrega</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/endereco.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <!-- Cabeçalho -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Endereço de <span>Entrega</span></div>
+      <div class="dash-user" id="dashUser">Selecione ou cadastre onde deseja receber seu pedido</div>
+    </div>
+    <div class="header-actions">
+      <a href="carrinho.html" class="btn-back-dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar ao carrinho
+      </a>
+      <a href="index.html" class="btn-back-dash">
+        Cardápio
+      </a>
+    </div>
+  </div>
+
+  <!-- Etapas do Pedido -->
+  <div class="checkout-steps">
+    <a href="carrinho.html" class="step-item done">
+      <span class="step-badge">✓</span>
+      <span class="step-label">1. Carrinho</span>
+    </a>
+    <div class="step-line"></div>
+    <div class="step-item active">
+      <span class="step-badge">2</span>
+      <span class="step-label">2. Endereço</span>
+    </div>
+    <div class="step-line"></div>
+    <div class="step-item" id="stepPagamentoLink">
+      <span class="step-badge">3</span>
+      <span class="step-label">3. Pagamento</span>
+    </div>
+  </div>
+
+  <!-- Banner Informativo: Modo Logado vs Sem Login (REQ. 10 e REQ. 11) -->
+  <div class="storage-info-banner" id="storageBanner">
+    <div class="storage-info-text">
+      <div class="storage-info-title" id="storageBannerTitle">
+        <span>🍪</span> Armazenamento local de endereço (Pedido sem conta)
+      </div>
+      <div class="storage-info-desc" id="storageBannerDesc">
+        Você está utilizando o site sem login. Com seu consentimento de cookies, salvamos seu endereço neste navegador (Local Storage) para agilizar seus próximos pedidos.
+      </div>
+    </div>
+    <label class="consent-toggle-wrap" id="consentWrap">
+      <input type="checkbox" id="chkConsentimentoCookies" checked />
+      <span>Permitir salvar no navegador</span>
+    </label>
+  </div>
+
+  <!-- Barra de título + botão Novo Endereço -->
+  <div class="section-bar">
+    <div>
+      <div class="section-bar-title">Meus <span>Endereços</span></div>
+      <div class="section-bar-sub" id="enderecoSubtitulo">Clique em um endereço abaixo para selecioná-lo para a entrega.</div>
+    </div>
+    <button class="btn-add" id="btnNovoEndereco" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Novo endereço
+    </button>
+  </div>
+
+  <!-- Lista de Endereços (GET /endereço/list) -->
+  <div id="listaEnderecos" class="enderecos-grid">
+    <div class="empty-enderecos">Carregando endereços…</div>
+  </div>
+
+  <!-- Barra Inferior de Confirmação e Avanço para Pagamento -->
+  <div class="footer-checkout-card">
+    <div class="footer-selected-summary">
+      <span class="footer-selected-label">Endereço selecionado para entrega</span>
+      <span class="footer-selected-value" id="resumoEnderecoSelecionado">Nenhum endereço selecionado</span>
+    </div>
+    <button class="btn-continuar" id="btnIrPagamento" type="button" disabled>
+      Escolher forma de pagamento
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<!-- ══════════ MODAL CADASTRAR / EDITAR ENDEREÇO (POST /endereço/add | PUT /endereço/edit) ══════════ -->
+<div class="modal-overlay" id="modalEndereco">
+  <div class="modal">
+    <button class="btn-close-modal" id="fecharModalEndereco" type="button" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="modal-title" id="modalEnderecoTitulo">Cadastrar <span>Endereço</span></div>
+    <div class="modal-sub" id="modalEnderecoSub">Preencha os campos obrigatórios (*) para a entrega do pedido.</div>
+
+    <div class="alert" id="alertEndereco" role="alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="alertEnderecoText">Preencha os campos obrigatórios.</span>
+    </div>
+
+    <div class="cep-row">
+      <div class="field">
+        <label for="endCep">CEP <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="endCep" placeholder="00000-000" maxlength="9" autocomplete="postal-code" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+      </div>
+      <button type="button" class="btn-buscar-cep" id="btnBuscarCep">Buscar CEP</button>
+    </div>
+
+    <div class="field">
+      <label for="endLogradouro">Rua / Logradouro <span class="req">*</span></label>
+      <div class="input-wrap">
+        <input type="text" id="endLogradouro" placeholder="Ex: Av. Paulista, Rua das Flores…" autocomplete="street-address" />
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label for="endNumero">Número <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="endNumero" placeholder="Ex: 123 ou S/N" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        </div>
+      </div>
+      <div class="field">
+        <label for="endBairro">Bairro <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="endBairro" placeholder="Ex: Centro, Jardim…" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="endComplemento">Complemento / Ponto de Referência <span style="color:var(--text-muted);font-weight:400;">(opcional)</span></label>
+      <div class="input-wrap">
+        <input type="text" id="endComplemento" placeholder="Ex: Apto 12, Bloco B, próximo à praça…" />
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+    </div>
+
+    <div class="fields-row">
+      <div class="field">
+        <label for="endCidade">Cidade <span class="req">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="endCidade" placeholder="Ex: Bebedouro" value="Bebedouro" />
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+      </div>
+      <div class="field">
+        <label for="endEstado">Estado (UF) <span class="req">*</span></label>
+        <select id="endEstado">
+          <option value="">Selecione…</option>
+          <option value="AC">AC - Acre</option>
+          <option value="AL">AL - Alagoas</option>
+          <option value="AP">AP - Amapá</option>
+          <option value="AM">AM - Amazonas</option>
+          <option value="BA">BA - Bahia</option>
+          <option value="CE">CE - Ceará</option>
+          <option value="DF">DF - Distrito Federal</option>
+          <option value="ES">ES - Espírito Santo</option>
+          <option value="GO">GO - Goiás</option>
+          <option value="MA">MA - Maranhão</option>
+          <option value="MT">MT - Mato Grosso</option>
+          <option value="MS">MS - Mato Grosso do Sul</option>
+          <option value="MG">MG - Minas Gerais</option>
+          <option value="PA">PA - Pará</option>
+          <option value="PB">PB - Paraíba</option>
+          <option value="PR">PR - Paraná</option>
+          <option value="PE">PE - Pernambuco</option>
+          <option value="PI">PI - Piauí</option>
+          <option value="RJ">RJ - Rio de Janeiro</option>
+          <option value="RN">RN - Rio Grande do Norte</option>
+          <option value="RS">RS - Rio Grande do Sul</option>
+          <option value="RO">RO - Rondônia</option>
+          <option value="RR">RR - Roraima</option>
+          <option value="SC">SC - Santa Catarina</option>
+          <option value="SP" selected>SP - São Paulo</option>
+          <option value="SE">SE - Sergipe</option>
+          <option value="TO">TO - Tocantins</option>
+        </select>
+      </div>
+    </div>
+
+    <input type="hidden" id="endId" />
+    <input type="hidden" id="endOrigem" />
+
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelarEndereco" type="button">Cancelar</button>
+      <button class="btn-save" id="salvarEndereco" type="button">Salvar endereço</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/endereco.js"></script>
+</body>
+</html>

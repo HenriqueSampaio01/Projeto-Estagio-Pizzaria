@@ -99,6 +99,30 @@ body.page-home {
 .nav-user { font-size: 13px; color: var(--text-muted); }
 .nav-user strong { color: var(--cream); }
 
+.btn-nav-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(212, 82, 10, 0.08);
+  color: var(--cream);
+  text-decoration: none;
+  max-width: 210px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.2s, background 0.2s;
+}
+.btn-nav-location:hover {
+  border-color: var(--orange);
+  background: rgba(212, 82, 10, 0.16);
+}
+
 .btn-nav-ghost {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
@@ -127,6 +151,50 @@ body.page-home {
   box-shadow: 0 3px 12px rgba(212,82,10,0.25);
 }
 .btn-nav:hover { opacity: 0.88; }
+
+/* ── Cookie Banner (REQ. 11) ── */
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 780px;
+  background: var(--bg-card);
+  border: 1px solid rgba(212, 82, 10, 0.4);
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  z-index: 60;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
+}
+.cookie-banner-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.cookie-banner-text strong {
+  color: var(--cream);
+}
+.btn-cookie-accept {
+  background: linear-gradient(135deg, var(--red-mid), var(--orange));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.btn-cookie-accept:hover {
+  opacity: 0.9;
+}
 
 /* ── Hero ── */
 .hero {
@@ -512,7 +580,7 @@ textarea:focus { border-color: var(--orange); }
 
 /* ── Responsivo ── */
 @media (max-width: 768px) {
-  .navbar { padding: 12px 16px; gap: 10px; }
+  .navbar { padding: 12px 16px; gap: 10px; flex-wrap: wrap; }
   .hero { flex-direction: column; padding: 40px 16px; }
   .hero-title { font-size: 34px; }
   .hero-img { width: 180px; height: 180px; }
@@ -520,4 +588,5 @@ textarea:focus { border-color: var(--orange); }
   .footer { padding: 24px 16px; }
   .fields-row { grid-template-columns: 1fr; }
   .cart-bar { padding: 12px 20px; }
+  .cookie-banner { flex-direction: column; align-items: stretch; text-align: center; }
 }

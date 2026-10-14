@@ -25,13 +25,30 @@ function atualizarCartBar() {
 }
 
 // ════════════════════════════════
-//  NAVBAR — estado logado/deslogado
+//  NAVBAR — estado logado/deslogado + endereço selecionado
 // ════════════════════════════════
+function obterTextoCurtoEndereco() {
+  try {
+    const end = JSON.parse(localStorage.getItem('bs_endereco_selecionado') || 'null')
+    if (end && end.logradouro) {
+      return `${end.logradouro}, ${end.numero}`
+    }
+  } catch {
+    // ignora
+  }
+  return 'Informar endereço'
+}
+
 const clienteNome = sessionStorage.getItem('cliente_nome')
 const navActions  = document.getElementById('navActions')
+const labelEnd    = obterTextoCurtoEndereco()
 
 if (clienteNome) {
   navActions.innerHTML = `
+    <a href="endereco.html" class="btn-nav-location" title="Definir ou alterar endereço de entrega">
+      <span>📍</span>
+      <span>${labelEnd}</span>
+    </a>
     <span class="nav-user">Olá, <strong>${clienteNome}</strong></span>
     <button class="btn-nav-ghost" id="btnLogoutCliente">Sair</button>
   `
@@ -41,8 +58,27 @@ if (clienteNome) {
     window.location.reload()
   })
 } else {
+  const navEndLabel = document.getElementById('navEnderecoLabel')
+  if (navEndLabel) navEndLabel.textContent = labelEnd
   document.getElementById('btnAbrirLogin').addEventListener('click',    () => abrirModal(modalLogin))
   document.getElementById('btnAbrirCadastro').addEventListener('click', () => abrirModal(modalCadastro))
+}
+
+// ════════════════════════════════
+//  CONSENTIMENTO DE COOKIES / LOCALSTORAGE (REQ. 11)
+// ════════════════════════════════
+const cookieBanner      = document.getElementById('cookieBanner')
+const btnAceitarCookies = document.getElementById('btnAceitarCookies')
+
+if (cookieBanner && !localStorage.getItem('bs_cookie_consent')) {
+  cookieBanner.style.display = 'flex'
+}
+if (btnAceitarCookies) {
+  btnAceitarCookies.addEventListener('click', () => {
+    localStorage.setItem('bs_cookie_consent', 'true')
+    document.cookie = `bs_cookie_consent=true; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`
+    cookieBanner.style.display = 'none'
+  })
 }
 
 // ════════════════════════════════
