@@ -341,7 +341,7 @@ document.getElementById('btnConfirmarPedido').addEventListener('click', async ()
     const payloadPedido = {
       endereco_id: enderecoIdBanco,
       status: 'Pendente',
-      forma_pagamento: descricaoPagamento,
+      forma_pagamento: `${descricaoPagamento} | Aguardando pagamento`,
       total: totalPedido,
       observacao: partesObs.join(' | ')
     }

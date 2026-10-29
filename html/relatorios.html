@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Relatórios e Logs de Auditoria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/relatorios.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Back<span>Stock</span> · Relatórios &amp; Auditoria</div>
+      <div class="dash-user" id="dashUser">Área restrita — Histórico Geral e Auditoria</div>
+    </div>
+    <div class="header-actions">
+      <a href="gerenciamentoPedidos.html" class="btn-back-dash">
+        🍕 Fila de Pedidos
+      </a>
+      <a href="../adm/dashboard.html" class="btn-back-dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <button class="btn-logout" id="btnLogout" type="button">Sair</button>
+    </div>
+  </div>
+
+  <!-- Abas Principais -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="pedidos" type="button">📋 Relatório de Pedidos Realizados</button>
+    <button class="tab-btn" data-tab="clientes" type="button">👥 Relatório de Clientes Cadastrados</button>
+    <button class="tab-btn" data-tab="logs" type="button">🛡️ Logs de Auditoria</button>
+  </div>
+
+  <!-- ══════════ ABA 1: RELATÓRIO DE PEDIDOS REALIZADOS ══════════ -->
+  <div class="tab-panel active" id="tab-pedidos">
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total de Pedidos no Período</div>
+        <div class="kpi-val" id="relPedTotalQtd">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Concluídos / Entregues (Desativados)</div>
+        <div class="kpi-val kpi-green" id="relPedEntreguesQtd">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Faturamento Total (R$)</div>
+        <div class="kpi-val kpi-orange" id="relPedValorTotal">R$ 0,00</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Receita com Pagamento Confirmado</div>
+        <div class="kpi-val kpi-green" id="relPedValorPago">R$ 0,00</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchRelPedido" placeholder="Buscar por #ID, cliente, endereço ou forma de pagamento…" />
+      </div>
+
+      <div class="filters-group">
+        <select id="filtroRelPeriodo" class="filter-select">
+          <option value="todos">Período: Todo o histórico</option>
+          <option value="hoje">Hoje</option>
+          <option value="7dias">Últimos 7 dias</option>
+          <option value="mes">Últimos 30 dias</option>
+        </select>
+
+        <select id="filtroRelStatusPedido" class="filter-select">
+          <option value="todos">Status do Pedido: Todos</option>
+          <option value="Entregue">✅ Entregues / Concluídos (Desativados)</option>
+          <option value="ativos">🍕 Em andamento (Fila ativa)</option>
+          <option value="Pendente">🕒 Pendente</option>
+          <option value="Preparando">🔥 Preparando</option>
+          <option value="Saiu para entrega">🛵 Saiu para entrega</option>
+        </select>
+
+        <select id="filtroRelStatusPag" class="filter-select">
+          <option value="todos">Pagamento: Todos</option>
+          <option value="Pagamento realizado">💚 Pagamento realizado</option>
+          <option value="Aguardando pagamento">⏳ Aguardando pagamento</option>
+        </select>
+
+        <button class="btn-export" id="btnExportarPedidosCsv" type="button">📥 Exportar CSV</button>
+        <button class="btn-export" onclick="window.print()" type="button">🖨️ Imprimir</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Data / Hora</th>
+            <th>Cliente / Endereço</th>
+            <th class="hide-mobile">Itens</th>
+            <th>Pagamento</th>
+            <th>Status Geral</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="bodyRelPedidos">
+          <tr class="empty-row"><td colspan="7">Carregando histórico de pedidos…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════ ABA 2: RELATÓRIO DE CLIENTES CADASTRADOS ══════════ -->
+  <div class="tab-panel" id="tab-clientes">
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total de Clientes Cadastrados</div>
+        <div class="kpi-val" id="relCliTotal">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Clientes Ativos</div>
+        <div class="kpi-val kpi-green" id="relCliAtivos">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Clientes Inativos</div>
+        <div class="kpi-val kpi-warn" id="relCliInativos">0</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Endereços Cadastrados</div>
+        <div class="kpi-val kpi-orange" id="relCliEnderecos">0</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchRelCliente" placeholder="Buscar por nome, CPF, e-mail ou cidade…" />
+      </div>
+
+      <div class="filters-group">
+        <select id="filtroRelStatusCliente" class="filter-select">
+          <option value="todos">Status: Todos os clientes</option>
+          <option value="ativos">Ativos</option>
+          <option value="inativos">Inativos</option>
+        </select>
+
+        <button class="btn-export" id="btnExportarClientesCsv" type="button">📥 Exportar CSV</button>
+        <button class="btn-export" onclick="window.print()" type="button">🖨️ Imprimir</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th class="hide-mobile">CPF</th>
+            <th>Contato</th>
+            <th class="hide-mobile">Endereço(s) Vinculado(s)</th>
+            <th class="hide-mobile">Data Cadastro</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="bodyRelClientes">
+          <tr class="empty-row"><td colspan="7">Carregando histórico de clientes…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════ ABA 3: LOGS DE AUDITORIA ══════════ -->
+  <div class="tab-panel" id="tab-logs">
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchRelLogs" placeholder="Buscar por administrador, pedido, ação ou detalhe…" />
+      </div>
+
+      <div class="filters-group">
+        <select id="filtroRelModuloLog" class="filter-select">
+          <option value="todos">Módulo: Todos</option>
+          <option value="Pedidos">Pedidos</option>
+          <option value="Pagamentos">Pagamentos</option>
+          <option value="Produtos">Produtos</option>
+          <option value="Categorias">Categorias</option>
+          <option value="Clientes">Clientes</option>
+        </select>
+
+        <button class="btn-export" id="btnExportarLogsCsv" type="button">📥 Exportar Logs CSV</button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Data / Hora</th>
+            <th>Responsável</th>
+            <th>Módulo</th>
+            <th>Ação</th>
+            <th>Referência</th>
+            <th>Detalhes da Operação</th>
+          </tr>
+        </thead>
+        <tbody id="bodyRelLogs">
+          <tr class="empty-row"><td colspan="6">Carregando logs de auditoria…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/relatorios.js"></script>
+</body>
+</html>

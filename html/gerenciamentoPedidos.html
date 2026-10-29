@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BackStock – Gerenciamento de Pedidos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/gerenciamentoPedidos.css" />
+</head>
+<body class="page-dashboard">
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <div class="dash-header">
+    <div>
+      <div class="dash-title">Back<span>Stock</span> · Pedidos</div>
+      <div class="dash-user" id="dashUser">Área restrita — Administração de Pedidos</div>
+    </div>
+    <div class="header-actions">
+      <a href="relatorios.html" class="btn-back-dash">
+        📊 Relatórios e Logs
+      </a>
+      <a href="../adm/dashboard.html" class="btn-back-dash">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Dashboard
+      </a>
+      <button class="btn-logout" id="btnLogout" type="button">Sair</button>
+    </div>
+  </div>
+
+  <!-- Indicadores Rápidos -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Pedidos Ativos na Fila</div>
+      <div class="kpi-val" id="kpiAtivos">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Em Preparo</div>
+      <div class="kpi-val kpi-orange" id="kpiPreparando">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Saiu para Entrega</div>
+      <div class="kpi-val kpi-blue" id="kpiSaiuEntrega">0</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Aguardando Pagamento</div>
+      <div class="kpi-val kpi-warn" id="kpiAguardandoPag">0</div>
+    </div>
+  </div>
+
+  <!-- Abas de Visualização (Ativos vs Entregues/Desativados) + Filtros -->
+  <div class="toolbar">
+    <div class="tabs">
+      <button class="tab-btn active" data-visao="ativos" type="button">🍕 Fila Ativa</button>
+      <button class="tab-btn" data-visao="entregues" type="button">✅ Entregues (Desativados)</button>
+      <button class="tab-btn" data-visao="todos" type="button">📋 Todos</button>
+    </div>
+
+    <div class="filters-right">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="searchPedido" placeholder="Buscar por #ID, cliente, item ou endereço…" />
+      </div>
+      <select id="filtroStatusPagamento" class="filter-select">
+        <option value="todos">Pagamento: Todos</option>
+        <option value="Aguardando pagamento">⏳ Aguardando pagamento</option>
+        <option value="Pagamento realizado">💚 Pagamento realizado</option>
+      </select>
+      <button class="btn-refresh" id="btnAtualizarPedidos" type="button" title="Atualizar lista de pedidos">
+        ↻ Atualizar
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de Pedidos (GET /GET-pedidos) -->
+  <div id="listaPedidosContainer" class="pedidos-grid">
+    <div class="empty-state">Carregando pedidos realizados…</div>
+  </div>
+
+</div>
+
+<!-- MODAL DE CONFIRMAÇÃO DE ENTREGA / DESATIVAÇÃO DO PEDIDO (PUT /end-pedido) -->
+<div class="modal-overlay" id="modalConfirmarEntrega">
+  <div class="modal" style="max-width:430px;text-align:center;">
+    <button class="btn-close-modal" id="fecharModalEntrega" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="confirm-icon-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+
+    <div class="modal-title">Confirmar <span>Entrega</span></div>
+    <p class="modal-sub" id="textoConfirmarEntrega" style="margin-bottom:16px;">
+      Deseja marcar este pedido como completo/entregue?
+    </p>
+
+    <div class="confirm-info-box">
+      O pedido será <strong>desativado da fila ativa</strong> de preparo e permanecerá salvo no histórico para consulta em <strong>Relatórios</strong> e <strong>Logs de Auditoria</strong>.
+    </div>
+
+    <label class="chk-confirmar-pag-wrap" id="wrapConfirmarPagJunto">
+      <input type="checkbox" id="chkConfirmarPagJunto" checked />
+      <span>Marcar pagamento também como <strong>Pagamento realizado</strong></span>
+    </label>
+
+    <input type="hidden" id="entregaPedidoId" />
+
+    <div class="modal-footer" style="justify-content:center;margin-top:20px;">
+      <button class="btn-cancel" id="cancelarEntrega" type="button">Cancelar</button>
+      <button class="btn-save btn-confirm-green" id="confirmarEntregaBtn" type="button">
+        ✓ Confirmar e desativar pedido
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg id="toastIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module" src="../js/gerenciamentoPedidos.js"></script>
+</body>
+</html>

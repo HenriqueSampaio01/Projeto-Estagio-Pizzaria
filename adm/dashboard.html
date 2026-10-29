@@ -19,36 +19,44 @@
     </div>
 
     <div class="dash-grid">
-      <div class="dash-card">
+      <div class="dash-card" onclick="window.location.href='../html/gerenciamentoPedidos.html'" style="cursor:pointer;">
         <div class="dc-icon">🍕</div>
-        <div class="dc-label">Pedidos Hoje</div>
-        <div class="dc-val">—</div>
+        <div class="dc-label">Pedidos</div>
+        <div class="dc-val" id="dashPedidosAtivos">—</div>
+        <div style="font-size:12px;margin-top:6px;color:var(--orange);">Gerenciar fila</div>
       </div>
-      <div class="dash-card" onclick="window.location.href='/html/gerenciamentoProdutos.html'" style="cursor:pointer;">
+      <div class="dash-card" onclick="window.location.href='../html/gerenciamentoProdutos.html'" style="cursor:pointer;">
         <div class="dc-icon">📦</div>
         <div class="dc-label">Produtos</div>
         <div class="dc-val" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Gerenciar</div>
       </div>
-      <div class="dash-card" onclick="window.location.href='/html/gerenciamentoClientes.html'" style="cursor:pointer;">
+      <div class="dash-card" onclick="window.location.href='../html/gerenciamentoClientes.html'" style="cursor:pointer;">
         <div class="dc-icon">👥</div>
         <div class="dc-label">Clientes</div>
         <div class="dc-val" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Gerenciar</div>
       </div>
-      <div class="dash-card">
+      <div class="dash-card" onclick="window.location.href='../html/relatorios.html'" style="cursor:pointer;">
         <div class="dc-icon">📊</div>
         <div class="dc-label">Relatórios</div>
-        <div class="dc-val">—</div>
+        <div class="dc-val" id="dashTotalHistorico" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Pedidos &amp; Clientes</div>
       </div>
     </div>
 
-    <div class="dash-card" onclick="window.location.href='/html/cadastroAdm.html'" style="cursor:pointer;">
+    <div class="dash-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="dash-card" onclick="window.location.href='../html/relatorios.html?tab=logs'" style="cursor:pointer;">
+        <div class="dc-icon">🛡️</div>
+        <div class="dc-label">Logs de Auditoria</div>
+        <div class="dc-val" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Verificar histórico</div>
+      </div>
+      <div class="dash-card" onclick="window.location.href='../html/cadastroAdm.html'" style="cursor:pointer;">
         <div class="dc-icon">🔐</div>
         <div class="dc-label">Administradores</div>
         <div class="dc-val" style="font-size:14px;margin-top:8px;color:var(--text-muted);">Cadastrar</div>
+      </div>
     </div>
 
     <div class="dash-note">
-      Tela padrão do sistema — integração com banco de dados em desenvolvimento.
+      Painel Administrativo BackStock — Clique em qualquer módulo acima para gerenciar.
     </div>
   </div>
 
@@ -62,6 +70,18 @@
     } else {
       const nome = session.user?.user_metadata?.nome || session.user?.email
       document.getElementById('dashUser').textContent = 'Olá, ' + nome
+    }
+
+    // Carrega contagem rápida de pedidos ativos para o card do Dashboard
+    try {
+      const { data: pedidos } = await supabase.from('pedido').select('id, status')
+      if (Array.isArray(pedidos)) {
+        const ativos = pedidos.filter(p => String(p.status || '').toLowerCase() !== 'entregue')
+        document.getElementById('dashPedidosAtivos').textContent = ativos.length
+        document.getElementById('dashTotalHistorico').textContent = `${pedidos.length} realizados`
+      }
+    } catch {
+      // mantém valor padrão
     }
 
     document.getElementById('btnLogout').addEventListener('click', async () => {
